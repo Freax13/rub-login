@@ -58,6 +58,7 @@
           serviceConfig = {
             Type = "oneshot";
             ExecStart = "${rub-loginBin}/bin/rub-login login ${escapeShellArg cfg.username} ${escapeShellArg cfg.passwordFile}";
+            TimeoutStartSec = "10s";
           };
         };
 
