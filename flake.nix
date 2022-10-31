@@ -1,31 +1,18 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
-    crate2nix = {
-      url = "github:kolloch/crate2nix";
-      flake = false;
-    };
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, crate2nix, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
         crateName = "rub-login";
 
-        inherit (import "${crate2nix}/tools.nix" { inherit pkgs; })
-          generatedCargoNix;
-
-        project = import (generatedCargoNix {
-          name = crateName;
-          src = ./.;
-        }) {
+        project = import ./Cargo.nix {
           inherit pkgs;
-          defaultCrateOverrides = pkgs.defaultCrateOverrides // {
-            # Crate dependency overrides go here
-          };
         };
 
       in {
